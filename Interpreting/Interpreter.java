@@ -3,21 +3,21 @@ package Interpreting;
 import Parsing.*;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.LinkedHashMap;
+
 
 /**
  * Interpreter interprets the current parsed input line
  */
 public class Interpreter {
 
-    private final HashMap<String, Integer> variablesTable;
+    private final LinkedHashMap<String, Integer> variablesTable;
 
     /**
      * default constructor
      */
     public Interpreter(){
-        variablesTable = new HashMap<>();
+        variablesTable = new LinkedHashMap<>();
     }
 
     /**
@@ -34,20 +34,19 @@ public class Interpreter {
 
     /**
      * Prints the value of each variable in the following format: (var1 = val1,var2 = val2, ...)
+     * @return the values of each variable
      */
-    public void printResult() {
+    public String printResult() {
 
+        String result = "";
         if (!variablesTable.isEmpty()) {
-            String result = "(";
-            Iterator iterator = variablesTable.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry pair = (Map.Entry) iterator.next();
-                result += pair.getKey() + "=" + pair.getValue() + ",";
-                iterator.remove();
-            }
+            result = "(";
+            for(String key: variablesTable.keySet())
+                result =  result.concat( key + "=" + variablesTable.get(key) + ",");
 
             result = result.substring(0, result.length() - 1) + ")";
             System.out.println(result);
         }
+        return result;
     }
 }

@@ -10,16 +10,15 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         Interpreter interpreter = new Interpreter();
+        Parser parser = new Parser();
 
         while (scanner.hasNextLine()){
             
             String line = scanner.nextLine();
-            Parser parser = new Parser(line);
 
             try{
-                interpreter.interpret(parser.parse());
+                interpreter.interpret(parser.parse(line));
             }
-
             catch (UnsupportedOperationException e) {
                 System.out.println("Invalid expression: Unsupported operation");
             }

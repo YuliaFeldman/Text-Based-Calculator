@@ -64,7 +64,7 @@ public class ValidationChecker {
             }
 
             else
-                throw new UnsupportedOperationException();
+                throw new UnsupportedOperatorException();
 
         }
     }

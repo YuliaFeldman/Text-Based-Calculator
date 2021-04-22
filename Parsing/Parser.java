@@ -21,15 +21,14 @@ import java.util.Arrays;
  */
 public class Parser {
 
-    private final ArrayList<String> words;
+    private ArrayList<String> words;
     private int currentIndex;
 
     /**
      * Constructor
-     * @param line current input line
      */
-    public Parser(String line){
-        words = new ArrayList<>(Arrays.asList(line.split("[ \t]+")));
+    public Parser(){
+        words = new ArrayList<>();
         currentIndex = 0;
     }
 
@@ -38,7 +37,10 @@ public class Parser {
      * @return root of the abstract syntax tree
      * @throws InvalidExpressionException if parsing process fails
      */
-    public AstNode parse() throws InvalidExpressionException {
+    public AstNode parse(String line) throws InvalidExpressionException {
+
+        words = new ArrayList<>(Arrays.asList(line.split("[ \t]+")));
+        currentIndex = 0;
 
         if(words.get(0).length() == 0) //if input line is empty
             return null;
@@ -56,8 +58,8 @@ public class Parser {
 
 
     /**
-     *
-     * @return
+     * Parses an expression in the input line
+     * @return the root of the subtree created by this function
      */
     private AstNode parseExpr(){
 
@@ -73,12 +75,15 @@ public class Parser {
         return node;
     }
 
-    //term: factor MUL factor
+
     /**
-     *
-     * @return
+     * Parses a term in the input line
+     * @return the root of the subtree created by this function
      */
     private AstNode parseTerm(){
+
+        //term: factor MUL factor
+
         AstNode node = parseFactor();
 
         while(currentIndex < words.size() && words.get(currentIndex).equals("*")){
@@ -89,17 +94,20 @@ public class Parser {
         return node;
     }
 
-    //factor: number | variable | ++variable | variable++
+
     /**
-     *
-     * @return
+     * Parses a factor in the input line
+     * @return the root of the subtree created by this function
      */
     private AstNode parseFactor(){
+
+        //factor: number | variable | ++variable | variable++
+
         String currWord = words.get(currentIndex);
 
         if(currWord.matches("[0-9]+")){
             currentIndex++;
-            return new Num(Integer.valueOf(currWord));
+            return new Num(Integer.parseInt(currWord));
         }
         else if(currWord.length() > 1 && currWord.substring(0,2).equals("++"))
             return parsePrefixInc();
@@ -110,12 +118,15 @@ public class Parser {
         return parseVariable();
     }
 
-    //assignment: variable = expr
+
     /**
-     *
-     * @return
+     * Parses assignment expression in the input line
+     * @return the root of the tree created by this function
      */
     private AstNode parseAssignment(){
+
+        //assignment: variable = expr
+
         AstNode left = parseVariable();
         currentIndex++;
         AstNode right = parseExpr();
@@ -123,12 +134,17 @@ public class Parser {
         return new Assign(left, "=", right);
     }
 
-    //plusAssignment: variable += expr
+
     /**
-     *
-     * @return
+     * Parses plus assignment expression in the input line
+     * @return the root of the tree created by this function
      */
     private AstNode parsePlusAssignment(){
+
+        //plus assignment: variable += expr
+
+        //placing the assignment: variable = variable + expr
+        //instead of the plus assignment
         words.set(1, "=");
         words.add(2, words.get(0));
         words.add(3, "+");
@@ -136,8 +152,8 @@ public class Parser {
     }
 
     /**
-     *
-     * @return
+     * Parses variable in the input line
+     * @return the root of the subtree created by this function
      */
     private AstNode parseVariable(){
         AstNode var = new Var(words.get(currentIndex));
@@ -145,11 +161,14 @@ public class Parser {
         return var;
     }
 
+
     /**
-     *
-     * @return
+     * Parses prefix increment expression in the input line
+     * @return the root of the subtree created by this function
      */
     private AstNode parsePrefixInc(){
+
+        //prefix increment: ++variable
         String varName = words.get(currentIndex).substring(2);
         Var var = new Var(varName);
         currentIndex++;
@@ -157,10 +176,12 @@ public class Parser {
     }
 
     /**
-     *
-     * @return
+     * Parses postfix increment expression in the input line
+     * @return the root of the subtree created by this function
      */
     private AstNode parsePostfixInc(){
+
+        //postfix increment: variable++
         String varName = words.get(currentIndex).substring(0, words.get(currentIndex).length()-2);
         Var var = new Var(varName);
         currentIndex++;
