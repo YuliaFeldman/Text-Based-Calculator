@@ -12,11 +12,14 @@ public class Main {
         Interpreter interpreter = new Interpreter();
 
         while (scanner.hasNextLine()){
+            
             String line = scanner.nextLine();
             Parser parser = new Parser(line);
+
             try{
                 interpreter.interpret(parser.parse());
             }
+
             catch (UnsupportedOperationException e) {
                 System.out.println("Invalid expression: Unsupported operation");
             }

@@ -6,70 +6,94 @@ import ValidationCheck.ValidationChecker;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-//Parsing.Parser will parse a single line and build an abstract syntax tree
-//which represents the expression this line holds
+/**
+ * Parser will parse a single line and build an abstract syntax tree
+ * which represents the expression this line holds
+ * Example: if the expression is x = 1 + 2 * 3, then the parser will build the following tree:
+ *
+ *                  =
+ *                /   \
+ *              x      +
+ *                   /  \
+ *                 1     *
+ *                      / \
+ *                     2   3
+ */
 public class Parser {
 
     private final ArrayList<String> words;
     private int currentIndex;
 
+    /**
+     * Constructor
+     * @param line current input line
+     */
     public Parser(String line){
         words = new ArrayList<>(Arrays.asList(line.split("[ \t]+")));
         currentIndex = 0;
     }
 
-
+    /**
+     * Parses the current input line and creates an abstract syntax tree that represents the expression
+     * @return root of the abstract syntax tree
+     * @throws InvalidExpressionException if parsing process fails
+     */
     public AstNode parse() throws InvalidExpressionException {
-        if(words.get(0).length() == 0)
+
+        if(words.get(0).length() == 0) //if input line is empty
             return null;
 
+        //validity check
         ValidationChecker checker = new ValidationChecker();
         checker.checkValidity(words);
 
+        //start of parsing process
         if(words.get(1).equals("+="))
             return parsePlusAssignment();
 
         return parseAssignment();
     }
 
-    //expr: term PLUS term
+
+    /**
+     *
+     * @return
+     */
     private AstNode parseExpr(){
+
+        //expr: term PLUS term
+
         AstNode node = parseTerm();
 
-        if(currentIndex < words.size()) {
+        while(currentIndex < words.size() && words.get(currentIndex).equals("+")){
             String op = words.get(currentIndex);
-
-            while (op.equals("+") && currentIndex < words.size()) {
-                currentIndex++;
-
-                node = new BinaryPlus(node, "+", parseTerm());
-                if(currentIndex < words.size())
-                    op = words.get(currentIndex);
-            }
+            currentIndex++;
+            node = new BinaryPlus(node, op, parseTerm());
         }
         return node;
     }
 
     //term: factor MUL factor
+    /**
+     *
+     * @return
+     */
     private AstNode parseTerm(){
         AstNode node = parseFactor();
 
-        if(currentIndex < words.size()) {
+        while(currentIndex < words.size() && words.get(currentIndex).equals("*")){
             String op = words.get(currentIndex);
-
-            while (op.equals("*") && currentIndex < words.size()) {
-//                System.out.println("term:" + op);
-                currentIndex++;
-
-                node = new BinaryMultiply(node, "*", parseFactor());
-                if(currentIndex < words.size())
-                    op = words.get(currentIndex);
-            }
+            currentIndex++;
+            node = new BinaryMultiply(node, op, parseFactor());
         }
         return node;
     }
 
-    //factor: INTEGER | variable | ++variable | variable++
+    //factor: number | variable | ++variable | variable++
+    /**
+     *
+     * @return
+     */
     private AstNode parseFactor(){
         String currWord = words.get(currentIndex);
 
@@ -86,6 +110,11 @@ public class Parser {
         return parseVariable();
     }
 
+    //assignment: variable = expr
+    /**
+     *
+     * @return
+     */
     private AstNode parseAssignment(){
         AstNode left = parseVariable();
         currentIndex++;
@@ -94,7 +123,11 @@ public class Parser {
         return new Assign(left, "=", right);
     }
 
-    //for parsing "+="
+    //plusAssignment: variable += expr
+    /**
+     *
+     * @return
+     */
     private AstNode parsePlusAssignment(){
         words.set(1, "=");
         words.add(2, words.get(0));
@@ -102,13 +135,20 @@ public class Parser {
         return parseAssignment();
     }
 
-    //this is the same as parseFactor.. can be united
+    /**
+     *
+     * @return
+     */
     private AstNode parseVariable(){
         AstNode var = new Var(words.get(currentIndex));
         currentIndex++;
         return var;
     }
 
+    /**
+     *
+     * @return
+     */
     private AstNode parsePrefixInc(){
         String varName = words.get(currentIndex).substring(2);
         Var var = new Var(varName);
@@ -116,6 +156,10 @@ public class Parser {
         return new PrefixIncrement("++", var);
     }
 
+    /**
+     *
+     * @return
+     */
     private AstNode parsePostfixInc(){
         String varName = words.get(currentIndex).substring(0, words.get(currentIndex).length()-2);
         Var var = new Var(varName);
