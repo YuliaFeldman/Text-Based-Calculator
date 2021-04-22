@@ -19,7 +19,7 @@ public class Parser {
     }
 
 
-    public AST parse() throws InvalidExpressionException {
+    public AstNode parse() throws InvalidExpressionException {
         if(words.get(0).length() == 0)
             return null;
 
@@ -33,17 +33,16 @@ public class Parser {
     }
 
     //expr: term PLUS term
-    private AST parseExpr(){
-        AST node = parseTerm();
+    private AstNode parseExpr(){
+        AstNode node = parseTerm();
 
         if(currentIndex < words.size()) {
             String op = words.get(currentIndex);
 
             while (op.equals("+") && currentIndex < words.size()) {
-//                System.out.println("expr: " + op);
                 currentIndex++;
 
-                node = new BinaryOp(node, "+", parseTerm());
+                node = new BinaryPlus(node, "+", parseTerm());
                 if(currentIndex < words.size())
                     op = words.get(currentIndex);
             }
@@ -52,8 +51,8 @@ public class Parser {
     }
 
     //term: factor MUL factor
-    private AST parseTerm(){
-        AST node = parseFactor();
+    private AstNode parseTerm(){
+        AstNode node = parseFactor();
 
         if(currentIndex < words.size()) {
             String op = words.get(currentIndex);
@@ -62,7 +61,7 @@ public class Parser {
 //                System.out.println("term:" + op);
                 currentIndex++;
 
-                node = new BinaryOp(node, "*", parseFactor());
+                node = new BinaryMultiply(node, "*", parseFactor());
                 if(currentIndex < words.size())
                     op = words.get(currentIndex);
             }
@@ -71,11 +70,10 @@ public class Parser {
     }
 
     //factor: INTEGER | variable | ++variable | variable++
-    private AST parseFactor(){
+    private AstNode parseFactor(){
         String currWord = words.get(currentIndex);
 
         if(currWord.matches("[0-9]+")){
-//            System.out.println("factor: "+ Integer.valueOf(currWord));
             currentIndex++;
             return new Num(Integer.valueOf(currWord));
         }
@@ -88,16 +86,16 @@ public class Parser {
         return parseVariable();
     }
 
-    private AST parseAssignment(){
-        AST left = parseVariable();
+    private AstNode parseAssignment(){
+        AstNode left = parseVariable();
         currentIndex++;
-        AST right = parseExpr();
+        AstNode right = parseExpr();
 
         return new Assign(left, "=", right);
     }
 
     //for parsing "+="
-    private AST parsePlusAssignment(){
+    private AstNode parsePlusAssignment(){
         words.set(1, "=");
         words.add(2, words.get(0));
         words.add(3, "+");
@@ -105,23 +103,22 @@ public class Parser {
     }
 
     //this is the same as parseFactor.. can be united
-    private AST parseVariable(){
-//        System.out.println("variable: "+ tokens[currentIndex]);
-        AST var = new Var(words.get(currentIndex));
+    private AstNode parseVariable(){
+        AstNode var = new Var(words.get(currentIndex));
         currentIndex++;
         return var;
     }
 
-    private AST parsePrefixInc(){
+    private AstNode parsePrefixInc(){
         String varName = words.get(currentIndex).substring(2);
-        AST var = new Var(varName);
+        Var var = new Var(varName);
         currentIndex++;
         return new PrefixIncrement("++", var);
     }
 
-    private AST parsePostfixInc(){
+    private AstNode parsePostfixInc(){
         String varName = words.get(currentIndex).substring(0, words.get(currentIndex).length()-2);
-        AST var = new Var(varName);
+        Var var = new Var(varName);
         currentIndex++;
         return new PostfixIncrement("++", var);
     }

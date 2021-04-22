@@ -23,6 +23,9 @@ public class Main {
             catch (InvalidExpressionException e){
                 System.out.println("Invalid expression: " + e.getMessage());
             }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
 
         }
         interpreter.printResult();

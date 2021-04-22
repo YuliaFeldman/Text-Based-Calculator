@@ -1,26 +1,27 @@
 package Parsing;
 
-public class BinaryOp extends AST{
+public abstract class BinaryOp extends AstNode {
 
-    private final AST left;
-    private final String op;
-    private final AST right;
+    protected final AstNode left;
+    protected final String op;
+    protected final AstNode right;
 
-    public BinaryOp(AST left, String op, AST right){
+    public BinaryOp(AstNode left, String op, AstNode right){
         this.op = op;
         this.left = left;
         this.right = right;
     }
 
-    public AST getLeft(){
+    public AstNode getLeft(){
         return left;
     }
 
-    public AST getRight(){
+    public AstNode getRight(){
         return right;
     }
 
     public String getOp(){
         return op;
     }
+
 }

@@ -1,20 +1,18 @@
 package Parsing;
 
-public class PrefixIncrement extends AST{
+import java.util.HashMap;
 
-    private final String op;
-    private final AST right;
+public class PrefixIncrement extends UnaryOp {
 
-    public PrefixIncrement(String op, AST right){
-        this.op = op;
-        this.right = right;
+    public PrefixIncrement(String op, Var right){
+        super(op, right);
     }
 
-    public AST getRight(){
-        return right;
-    }
+    public int evaluate(HashMap<String,Integer> variablesTable){
 
-    public String getOp(){
-        return op;
+        String varName = ((Var)operand).getValue();
+        int varValue = variablesTable.get(varName) + 1;
+        variablesTable.replace(varName, varValue);
+        return varValue;
     }
 }

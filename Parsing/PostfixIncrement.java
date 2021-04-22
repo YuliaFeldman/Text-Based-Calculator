@@ -1,20 +1,18 @@
 package Parsing;
 
-public class PostfixIncrement extends AST{
+import java.util.HashMap;
 
-    private final String op;
-    private final AST left;
+public class PostfixIncrement extends UnaryOp {
 
-    public PostfixIncrement(String op, AST left){
-        this.op = op;
-        this.left = left;
+    public PostfixIncrement(String op, Var left){
+        super(op, left);
     }
 
-    public AST getLeft(){
-        return left;
-    }
+    public int evaluate(HashMap<String,Integer> variablesTable){
 
-    public String getOp(){
-        return op;
+        String varName = ((Var)operand).getValue();
+        int varValue = variablesTable.get(varName) + 1;
+        variablesTable.replace(varName, varValue);
+        return varValue - 1;
     }
 }

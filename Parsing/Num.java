@@ -1,6 +1,8 @@
 package Parsing;
 
-public class Num extends AST{
+import java.util.HashMap;
+
+public class Num extends AstNode {
 
       private final int value;
 
@@ -9,6 +11,10 @@ public class Num extends AST{
     }
 
     public int getValue(){
+        return value;
+    }
+
+    public int evaluate(HashMap<String,Integer> variablesTable){
         return value;
     }
 }
