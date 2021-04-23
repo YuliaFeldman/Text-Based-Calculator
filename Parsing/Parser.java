@@ -1,7 +1,6 @@
 package Parsing;
 
-import ValidationCheck.InvalidExpressionException;
-import ValidationCheck.ValidationChecker;
+import Interpreting.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -143,12 +142,12 @@ public class Parser {
 
         //plus assignment: variable += expr
 
-        //placing the assignment: variable = variable + expr
-        //instead of the plus assignment
-        words.set(1, "=");
-        words.add(2, words.get(0));
-        words.add(3, "+");
-        return parseAssignment();
+        AstNode left = parseVariable();
+        currentIndex++;
+        AstNode right = parseExpr();
+
+        return new PlusAssign(left, "+=", right);
+
     }
 
     /**

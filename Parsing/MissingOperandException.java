@@ -1,4 +1,4 @@
-package ValidationCheck;
+package Parsing;
 
 public class MissingOperandException extends InvalidExpressionException{
 

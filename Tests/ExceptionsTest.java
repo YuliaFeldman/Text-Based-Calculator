@@ -2,8 +2,7 @@ package Tests;
 
 import Interpreting.Interpreter;
 import Interpreting.UndefinedVariableException;
-import Parsing.Parser;
-import ValidationCheck.*;
+import Parsing.*;
 import org.junit.jupiter.api.Test;
 
 public class ExceptionsTest {
@@ -57,6 +56,20 @@ public class ExceptionsTest {
         }
         catch (Exception e){
             assert e.getMessage().equals(new UnsupportedOperatorException().getMessage());
+        }
+
+        try {
+            interpreter.interpret(parser.parse("a = 2 = b"));
+        }
+        catch (Exception e){
+            assert e.getMessage().equals(new MultiAssignmentException().getMessage());
+        }
+
+        try {
+            interpreter.interpret(parser.parse("a = 2 += b"));
+        }
+        catch (Exception e){
+            assert e.getMessage().equals(new MultiAssignmentException().getMessage());
         }
 
     }

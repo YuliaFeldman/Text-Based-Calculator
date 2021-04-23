@@ -1,4 +1,4 @@
-package ValidationCheck;
+package Parsing;
 
 public class MissingAssignmentValueException extends InvalidExpressionException{
 

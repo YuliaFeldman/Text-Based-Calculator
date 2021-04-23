@@ -1,4 +1,4 @@
-import ValidationCheck.InvalidExpressionException;
+import Parsing.InvalidExpressionException;
 import Interpreting.Interpreter;
 import Parsing.Parser;
 

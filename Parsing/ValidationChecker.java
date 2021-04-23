@@ -1,4 +1,4 @@
-package ValidationCheck;
+package Parsing;
 
 import java.util.ArrayList;
 
@@ -63,6 +63,8 @@ public class ValidationChecker {
                     throw new MissingOperatorException();
             }
 
+            else if(isAssign(words.get(i)) || isPlusAssign(words.get(i)))
+                throw new MultiAssignmentException();
             else
                 throw new UnsupportedOperatorException();
 
