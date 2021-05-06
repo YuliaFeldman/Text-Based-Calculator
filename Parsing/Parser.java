@@ -52,6 +52,10 @@ public class Parser {
         if(words.get(1).equals("+="))
             return parsePlusAssignment();
 
+        else if(words.get(1).equals("-="))
+            return parseMinusAssignment();
+
+
         return parseAssignment();
     }
 
@@ -156,6 +160,22 @@ public class Parser {
         AstNode right = parseExpr();
 
         return new PlusAssign(left, "+=", right);
+
+    }
+
+    /**
+     * Parses minus assignment expression in the input line
+     * @return the root of the tree created by this function
+     */
+    private AstNode parseMinusAssignment(){
+
+        //plus assignment: variable -= expr
+
+        AstNode left = parseVariable();
+        currentIndex++;
+        AstNode right = parseExpr();
+
+        return new MinusAssign(left, "-=", right);
 
     }
 

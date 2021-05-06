@@ -32,7 +32,7 @@ public class ValidationChecker {
             throw new IllegalVariableNameException();
 
         if(words.size() == 1 ||
-                (!isAssign(words.get(1)) && !isPlusAssign(words.get(1))))
+                (!isAssign(words.get(1)) && !isPlusAssign(words.get(1)) && !isMinusAssign(words.get(1))))
             throw new MissingAssignmentExpressionException();
 
         else{
@@ -63,7 +63,7 @@ public class ValidationChecker {
                     throw new MissingOperatorException();
             }
 
-            else if(isAssign(words.get(i)) || isPlusAssign(words.get(i)))
+            else if(isAssign(words.get(i)) || isPlusAssign(words.get(i)) || isMinusAssign(words.get(i)))
                 throw new MultiAssignmentException();
             else
                 throw new UnsupportedOperatorException();
@@ -108,6 +108,13 @@ public class ValidationChecker {
      */
     private boolean isPlusAssign(String s){
         return s.equals("+=");
+    }
+
+    /**
+     * Checks if a given word represents the minus assignment operator "+="
+     */
+    private boolean isMinusAssign(String s){
+        return s.equals("-=");
     }
 
     /**
