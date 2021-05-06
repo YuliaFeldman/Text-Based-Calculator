@@ -6,7 +6,7 @@ __Input__: The input is a series of assignment expressions. The syntax is a subs
 
 __Output__: At the end of evaluating the series, the value of each variable is printed out.
 
-###Example
+**Example**
 Following is a series of valid inputs for the program:
 ```
 i = 0
