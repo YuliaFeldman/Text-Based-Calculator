@@ -13,7 +13,7 @@ public class Main {
         Parser parser = new Parser();
 
         while (scanner.hasNextLine()){
-            
+
             String line = scanner.nextLine();
 
             try{

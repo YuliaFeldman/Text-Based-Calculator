@@ -62,14 +62,19 @@ public class Parser {
      */
     private AstNode parseExpr(){
 
-        //expr: term PLUS term
+        //expr: term PLUS|MINUS term
 
         AstNode node = parseTerm();
 
-        while(currentIndex < words.size() && words.get(currentIndex).equals("+")){
+        while(currentIndex < words.size() &&
+                (words.get(currentIndex).equals("+") || words.get(currentIndex).equals("-"))){
             String op = words.get(currentIndex);
             currentIndex++;
-            node = new BinaryPlus(node, op, parseTerm());
+            if(op.equals("+")) {
+                node = new BinaryPlus(node, op, parseTerm());
+            }
+            else
+                node = new BinaryMinus(node,op,parseTerm());
         }
         return node;
     }
