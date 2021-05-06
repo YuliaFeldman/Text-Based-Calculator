@@ -3,7 +3,7 @@ package Interpreting;
 import java.util.HashMap;
 
 /**
- * BinaryMultiply represents a binary multiply operation node in the abstract syntax tree
+ * BinaryMultiply represents a binary divide operation node in the abstract syntax tree
  */
 public class BinaryDivide extends BinaryOp{
 
@@ -19,7 +19,7 @@ public class BinaryDivide extends BinaryOp{
     }
 
     /**
-     * Evaluates the value of this binary multiply operation node according to values of the variables
+     * Evaluates the value of this binary divide operation node according to values of the variables
      * @param variablesTable values of variables
      * @return the value of this node
      * @throws Exception if evaluation process fails
