@@ -86,14 +86,18 @@ public class Parser {
      */
     private AstNode parseTerm(){
 
-        //term: factor MUL factor
+        //term: factor MUL|DIV factor
 
         AstNode node = parseFactor();
 
-        while(currentIndex < words.size() && words.get(currentIndex).equals("*")){
+        while(currentIndex < words.size() &&
+                (words.get(currentIndex).equals("*") || words.get(currentIndex).equals("/"))){
             String op = words.get(currentIndex);
             currentIndex++;
-            node = new BinaryMultiply(node, op, parseFactor());
+            if(op.equals("*"))
+                node = new BinaryMultiply(node, op, parseFactor());
+            else
+                node = new BinaryDivide(node, op, parseFactor());
         }
         return node;
     }

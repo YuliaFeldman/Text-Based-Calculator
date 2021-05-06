@@ -114,7 +114,7 @@ public class ValidationChecker {
      * Checks if a given word represents a binary operator
      */
     private boolean isBinaryOp(String s){
-        return s.equals("+") || s.equals("-") || s.equals("*");
+        return s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/");
     }
 
     /**
